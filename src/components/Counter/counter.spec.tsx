@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, act } from '@testing-library/react';
+import { fireEvent, render, screen, act, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import Counter from './index';
 import userEvent from '@testing-library/user-event';
 
@@ -26,7 +26,7 @@ describe("Counter Component",() => {
         });
 
         describe('When the incrementor is change to 5 and the + button is clicked', () => {
-            beforeEach(() => {
+            beforeEach(async () => {
 
                 const input = screen.getByLabelText('inc-input')
                 fireEvent.change(input,  {
@@ -35,16 +35,19 @@ describe("Counter Component",() => {
                     }
                 });
                 fireEvent.click(screen.getByRole('button', { name : /increment/}));
+                await waitForElementToBeRemoved(() => screen.queryByText('This is too small'));
             });
 
-            test('Current count will be: Current count: 15', () => {
-                expect(screen.getByText("Current count: 15")).toBeInTheDocument();
+            test('Current count will be: Current count: 15', async () => {
+                await waitFor(() => expect(screen.getByText("Current count: 15")).toBeInTheDocument())
             });
+
+            // test('it renders isBig and will disappear after 300ms', async () => {
+            // })
         })
 
         describe('When the incrementor is change to 25 and the - button is clicked', () => {
             beforeEach(() => {
-
                 const input = screen.getByLabelText('inc-input')
                 fireEvent.change(input,  {
                     target: {
@@ -96,8 +99,8 @@ describe("Counter Component",() => {
                 fireEvent.click(screen.getByRole('button', { name : /increment/}));
             })
 
-            test("it renders: default counter = 0 and Current count: 1", () => {
-                expect(screen.getByText("Current count: 1")).toBeInTheDocument();
+            test("it renders: default counter = 0 and Current count: 1", async () => {
+                await waitFor(() => expect(screen.getByText("Current count: 1")).toBeInTheDocument())
             })
 
         })
