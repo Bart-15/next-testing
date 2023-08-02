@@ -7,28 +7,28 @@ import { setupServer } from 'msw/node';
 import { rest } from 'msw';
 
 const server = setupServer(
-  rest.post('/api/favourite', (req, res, ctx) => {
-    // const photo = req.body;
-    // return res(
-    //   ctx.delay(200),
-    //   ctx.json({ ...photo, favourite: !photo.favourite })
-    // );
+  rest.post('/api/favourite', async (req, res, ctx) => {
+    const photo = await req.json();
+    return res(
+      ctx.delay(200),
+      ctx.json({ ...photo, favourite: !photo.favourite })
+    );
   }),
 
   rest.get('/api/photos', (req, res, ctx) => {
-  //   const name = req.url.searchParams.get('name') || 'Unknown';
-  //   return res(
-  //     //   ctx.delay(100),
-  //     ctx.json([
-  //       {
-  //         id: 1,
-  //         thumbnailUrl: '/photo1.png',
-  //         title: name + ': Hello World',
-  //         favourite: false,
-  //       },
-  //     ])
-  //   );
-  // })
+    const name = req.url.searchParams.get('name') || 'Unknown';
+    return res(
+      //   ctx.delay(100),
+      ctx.json([
+        {
+          id: 1,
+          thumbnailUrl: '/photo1.png',
+          title: name + ': Bart Tabusao',
+          favourite: false,
+        },
+      ])
+    );
+  })
 );
 
 beforeAll(() => server.listen());
@@ -53,8 +53,8 @@ describe("Photo List component", () => {
       expect(input).toHaveValue("");
     })
   
-    test('renders the photos', () => {
-      expect(screen.getByText('reprehenderit est deserunt velit ipsam')).toBeInTheDocument()
+    test('renders the Bart Tabusao as title', () => {
+      expect(screen.getByText(/Bart Tabusao/i)).toBeInTheDocument()
     })
 
   })
