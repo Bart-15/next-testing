@@ -13,12 +13,12 @@ const PhotoList = () => {
 
     return ( 
         <div>
-            <button className="text-white bg-zinc-900 rounded px-4 py-0.5 mb-6" onClick={() => setRefresh(prev => ++prev)}>Refresh</button>
+            <button aria-label="refresh" className="text-white bg-zinc-900 rounded px-4 py-0.5 mb-6" onClick={() => setRefresh(prev => ++prev)}>Refresh</button>
             <h1 className="mb-6 font-bold md:text-2xl lg:text-3xl">Photo List</h1>
                 <div className="container mb-4">
                     <input aria-label="name-input" value={name} onChange={(e) => setName(e.target.value)} type="text" className="w-full rounded-lg focus:outline-none px-3 py-2 max-w-full" placeholder="Search Here..."  />
                 </div>
-                <List refresh={refresh} name={name} />
+            <List refresh={refresh} name={name} />
         </div>
     );
 }
@@ -32,42 +32,42 @@ function List({ refresh, name }: { refresh: number; name: string }) {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        async function load() {
-        setLoading((l) => l + 1);
+    //     async function load() {
+    //     setLoading((l) => l + 1);
 
-        try {
-            const r = await axios.get<Photo[]>(`/api/photos?name=${name}`);
-            setPhotos(r.data);
-            setError('');
-        } catch (e) {
-            if(e instanceof AxiosError) {
-                setError(e.response?.data.message);
+    //     try {
+    //         const r = await axios.get<Photo[]>(`/api/photos?name=${name}`);
+    //         setPhotos(r.data);
+    //         setError('');
+    //     } catch (e) {
+    //         if(e instanceof AxiosError) {
+    //             setError(e.response?.data.message);
                 
-            }
-        } finally {
-            setLoading((l) => l - 1);
-        }
-    }
-
-    // async function load() {
-    //   setLoading(l => l+1);
-
-    //   try {
-    //     const r = await fetch(`/api/photos?name=${name}`);
-    //     const json = await r.json();
-
-    //     if (!r.ok) {
-    //       throw new Error(json.message);
+    //         }
+    //     } finally {
+    //         setLoading((l) => l - 1);
     //     }
-
-    //     setPhotos(json);
-    //     setError('');
-    //   } catch (e) {
-    //     setError(e.message);
-    //   } finally {
-    //     setLoading(l => l-1);
-    //   }
     // }
+
+    async function load() {
+      setLoading(l => l+1);
+
+      try {
+        const r = await fetch(`/api/photos?name=${name}`);
+        const json = await r.json();
+
+        if (!r.ok) {
+          throw new Error(json.message);
+        }
+
+        setPhotos(json);
+        setError('');
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setLoading(l => l-1);
+      }
+    }
 
         void load();
     }, [refresh, name]);
@@ -105,7 +105,7 @@ function PhotoDetail({ photo }: { photo: Photo }) {
             <Image src={photo.thumbnailUrl} alt="image" width="200" height="300" className="object-fill w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"/>
             <div className="flex flex-col justify-between p-4 leading-normal">
                 <h3 className="mb-2 text-1xl font-bold tracking-tight text-gray-900 dark:text-white">{photo.title}</h3>
-                <button onClick={() => handleAddFav(photo)} className="text-white rounded-lg bg-zinc-900">{favourite ? 'Remove from Favourites' : 'Add To Favourites'}</button>
+                <button onClick={() => handleAddFav(photo)} className="text-white rounded-lg bg-zinc-900">{favourite ? 'Remove from Favourites' : 'Add to Favourites'}</button>
             </div>
         </div>
     )
