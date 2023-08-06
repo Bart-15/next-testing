@@ -1,40 +1,8 @@
 import { fireEvent, render, screen, waitFor, waitForElementToBeRemoved } from "@testing-library/react";
 import PhotoList from "./index";
-import { Photo } from "@/models/Photo";
 import userEvent from '@testing-library/user-event';
-
-import { setupServer } from 'msw/node';
 import { rest } from 'msw';
-
-const server = setupServer(
-  rest.post<Photo>('/api/favourite', async (req, res, ctx) => {
-    const photo = await req.json();
-    return res(
-      ctx.delay(200),
-      ctx.json({ ...photo, favourite: !photo.favourite })
-    );
-  }),
-
-  rest.get('/api/photos', (req, res, ctx) => {
-    const name = req.url.searchParams.get('name') || 'Unknown';
-    return res(
-        ctx.delay(100),
-      ctx.json([
-        {
-          id: 1,
-          thumbnailUrl: '/photo1.png',
-          title: name + ': Bart Tabusao',
-          favourite: false,
-        },
-      ])
-    );
-  })
-);
-
-beforeAll(() => server.listen());
-afterAll(() => server.close());
-afterEach(() => server.resetHandlers());
-
+import { mswServer } from "@/mocks/mswServer";
 
 const user = userEvent.setup()
 
@@ -88,7 +56,7 @@ describe("Photo List component", () => {
 
   describe('When the refresh button is clicked and the server returns status 500', () => {
     beforeEach(async() => {
-      server.use(
+      mswServer.use(
         rest.get<any, {message: string}>('/api/photos', (req, res, ctx) => {
           return res(ctx.delay(100),ctx.status(500), ctx.json({message: "Ooops something went wrong, please try again later."}));
         })

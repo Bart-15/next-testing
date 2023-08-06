@@ -1,0 +1,1 @@
+export type CountryTypes = 'Germany' | 'France' | 'Italy'
