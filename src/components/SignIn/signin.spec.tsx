@@ -14,7 +14,7 @@ describe('SignIn Component', () => {
                 handleSubmit: () => jest.fn(),
                 getValues: () => jest.fn(),
             } ),
-        })).resetAllMocks()
+        }))
 
         render(<SignIn />)
 
@@ -53,44 +53,40 @@ describe('SignIn Component', () => {
 
     describe('User start typing on password field', () => {
         beforeEach(async () => {
-            const passwordInput = screen.getByLabelText(/password/)
+            const passwordInput = screen.getByLabelText(/password-input/)
 
-            await user.type(passwordInput, 'hi')
+            await user.type(passwordInput, '{selectall}hi')
         })
 
         test('it renders: "Password must be at least 6 characters" If the password input length < 6', () => {
-            expect(screen.getByLabelText(/error-password/i)).toHaveTextContent('Password must be at least 6 characters')
+            expect(screen.getByLabelText(/error-password/i)).toHaveTextContent('Password must be at least 6 characters');
+            expect(screen.getByLabelText(/password-input/)).toHaveValue('hi');
         });
     });
 
 
-    describe('email input is valid', () => {
+    describe('Signin inputs are valid', () => {
         beforeEach(async () => {
+            const passwordInput = screen.getByLabelText(/password-input/)
+
             const emailInput = screen.getByRole('textbox', {
                 name: /email address/i
             });
             
-            user.type(emailInput, 'balongtabusao@gmail.com');
+            await user.type(emailInput, '{selectall}balongtabusao@gmail.com');
+            await user.type(passwordInput, '{selectall}hello12345')
         });
 
-        test('error message for email will removed', async () => {
+        test('it renders: email: "balongtabusao@gmail.com" No Email error message', async () => {
+            expect(screen.getByRole('textbox', {
+                name: /email address/i
+            })).toHaveValue('balongtabusao@gmail.com');
             expect(screen.queryByText('Invalid email')).not.toBeInTheDocument();
         })  
-    })
 
-    describe('password input is valid', () => {
-        beforeEach(async () => {
-
-            const passwordInput = screen.getByLabelText(/password/)
-
-            await user.type(passwordInput, '{selectall}hello12345')
-
-        })
-        
-        test('expects password value "hello12345"', async () => {
-           await waitFor(() => {
-                expect(screen.getByLabelText(/password/)).toHaveValue('hello12345')
-            })
+        test('No Password error message', () => {
+            expect(screen.getByLabelText(/password-input/)).toHaveValue('hello12345');
+            expect(screen.queryByText('Password must be at least 6 characters')).not.toBeInTheDocument();
         })  
     })
 

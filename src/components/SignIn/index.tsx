@@ -37,7 +37,7 @@ const SignIn = () => {
                     <div>
                         <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">Password</label>
                         <div className="mt-2">
-                            <input {...register('password')} id="password" type="password" className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6" />
+                            <input aria-label="password-input" {...register('password')} id="password" type="password" className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6" />
                         </div>
                         { errors.password && (<p aria-label='error-password' className="text-sm text-red-600 my-1">{errors.password.message}</p>)}
                     </div>
