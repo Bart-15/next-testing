@@ -1,7 +1,6 @@
-import { screen, render, waitForElementToBeRemoved, waitFor, fireEvent } from '@testing-library/react';
-import SignIn from '.';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import debug from 'debug';
+import SignIn from '.';
 
 const user = userEvent.setup();
 
