@@ -4,7 +4,8 @@ import PhotoList from '@/components/PhotoList'
 import User from '@/components/User'
 import CarBrands from '@/components/CarBrands'
 import { MySwrConfig } from '@/components/CarBrands/MySwrConfig'
-import SignIn from '@/components/SignIn'
+import Toggle from '@/components/Toggle'
+// import SignIn from '@/components/SignIn'
 
 
 if (process.env.NEXT_PUBLIC_API_MOCKING === 'true') {
@@ -26,7 +27,9 @@ export default function Home() {
       </MySwrConfig> */}
 
       {/* React hook form */}
-      <SignIn />
+      {/* <SignIn /> */}
+
+      <Toggle />
     </main>
   )
 }
